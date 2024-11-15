@@ -71,3 +71,30 @@ for timesteps in timesteps_list:
     # Make predictions
     predicted_prices = model.predict(x_test)
     predicted_prices = scaler.inverse_transform(predicted_prices)  # Transform predictions back to original scale
+
+    # Calculate performance metrics: MSE, RMSE, and MAE
+    mse = mean_squared_error(actual_prices[-len(predicted_prices):], predicted_prices)
+    rmse = np.sqrt(mse)
+    mae = mean_absolute_error(actual_prices[-len(predicted_prices):], predicted_prices)
+    results[timesteps] = {'MSE': mse, 'RMSE': rmse, 'MAE': mae}  # Store metrics for comparison
+
+    # Plot actual vs. predicted prices for each timestep configuration
+    plt.figure(figsize=(14, 5))
+    plt.plot(actual_prices, color="black", label=f"Actual {company} Price")
+    plt.plot(range(len(actual_prices) - len(predicted_prices), len(actual_prices)), predicted_prices,
+             color="green", label=f"Predicted {company} Price (timesteps={timesteps})")
+    plt.title(f"{company} Share Price Prediction")
+    plt.xlabel('Time')
+    plt.ylabel(f'{company} Share Price')
+    plt.legend()
+    plt.show()
+
+    # Plot training and validation loss for the current model to assess convergence
+    plt.figure(figsize=(10, 5))
+    plt.plot(history.history['loss'], label='Training Loss')
+    plt.plot(history.history['val_loss'], label='Validation Loss')
+    plt.title(f"Training and Validation Loss (timesteps={timesteps})")
+    plt.xlabel('Epochs')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.show()
