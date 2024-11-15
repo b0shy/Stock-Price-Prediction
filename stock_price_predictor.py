@@ -17,3 +17,14 @@ end = dt.datetime.now()
 # Download the stock data within the specified date range
 data = yf.download(company, start=start, end=end)
 
+# Scale the 'Close' price data to values between 0 and 1 for normalization
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))
+
+# Function to create sequences for time series forecasting based on timesteps
+def create_sequences(data, timesteps):
+    x, y = [], []
+    for i in range(timesteps, len(data)):
+        x.append(data[i - timesteps:i, 0])  # Create sequences of length `timesteps`
+        y.append(data[i, 0])  # Target value is the price after the sequence
+    return np.array(x), np.array(y)
