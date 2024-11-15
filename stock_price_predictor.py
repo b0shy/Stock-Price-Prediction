@@ -5,6 +5,8 @@ import datetime as dt
 import yfinance as yf
 
 from sklearn.preprocessing import MinMaxScaler
+
+#use 'pip install tensorflow' in terminal to install tensorflow
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, SimpleRNN
 from sklearn.metrics import mean_squared_error, mean_absolute_error
