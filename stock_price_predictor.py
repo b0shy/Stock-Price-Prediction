@@ -98,3 +98,20 @@ for timesteps in timesteps_list:
     plt.ylabel('Loss')
     plt.legend()
     plt.show()
+
+    # Predict the next day price based on the latest available data
+    real_data = [model_inputs[len(model_inputs) - timesteps:len(model_inputs), 0]]
+    real_data = np.array(real_data)
+    real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))  # Reshape for model input
+
+    prediction = model.predict(real_data)  # Predict the next day price
+    prediction = scaler.inverse_transform(prediction)  # Transform prediction back to original scale
+    print(f"Next Day Prediction with timesteps={timesteps}: {prediction[0][0]}")
+
+# Display and compare performance metrics for each timestep configuration
+print("Performance Comparison:")
+for timesteps, metrics in results.items():
+    print(f"\nTimesteps: {timesteps}")
+    print(f"MSE: {metrics['MSE']}")
+    print(f"RMSE: {metrics['RMSE']}")
+    print(f"MAE: {metrics['MAE']}")
